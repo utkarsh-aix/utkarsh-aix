@@ -235,7 +235,7 @@ utkarsh = {
     "building"    : ["LLM scrapers", "POS data pipelines", "AI agents"],
     "learning"    : ["LangGraph multi-agent systems", "Fine-tuning (LoRA/QLoRA)", "Vertex AI"],
     "seeking"     : "Full-time AI/ML Engineer role",
-    "open_to"     : ["Remote", "Hybrid", "Ahmedabad", "Bangalore", "Mumbai"],
+    "open_to"     : ["Remote", "Hybrid", "Ahmedabad", "Bangalore", "Mumbai",Pune, Gurugram, Noida],
     "contact"     : "teamutkarsh22@gmail.com"
 }
 ```
