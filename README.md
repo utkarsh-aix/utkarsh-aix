@@ -181,18 +181,18 @@ End-to-end ML systems deployed as Dockerized FastAPI services. XGBoost engines w
 </div>
 
 <div align="center">
-  <img src="https://github-stats-extended.vercel.app/api?username=utkarsh-aix&show_icons=true&theme=dark&bg_color=0D1117&title_color=00FFA3&icon_color=7B61FF&text_color=E6EDF3&border_color=7B61FF&hide_border=false&count_private=true" height="180"/>
-  <img src="https://github-stats-extended.vercel.app/api/top-langs/?username=utkarsh-aix&layout=compact&theme=dark&bg_color=0D1117&title_color=00FFA3&text_color=E6EDF3&border_color=7B61FF&langs_count=6" height="180"/>
+  <img src="https://github-stats-extended.vercel.app/api?username=utkarsh-aix&show_icons=true&theme=dark&bg_color=0D1117&title_color=00FFA3&icon_color=7B61FF&text_color=E6EDF3&border_color=7B61FF&hide_border=false&count_private=true&cache_bypass=1" height="180"/>
+  <img src="https://github-stats-extended.vercel.app/api/top-langs/?username=utkarsh-aix&layout=compact&theme=dark&bg_color=0D1117&title_color=00FFA3&text_color=E6EDF3&border_color=7B61FF&langs_count=6&cache_bypass=1" height="180"/>
 </div>
 
 <div align="center">
-  <img src="https://streak-stats.demolab.com/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF" width="60%"/>
+  <img src="https://streak-stats.demolab.com/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF&cache_bypass=1" width="60%"/>
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=utkarsh-aix&bg_color=0D1117&color=00FFA3&line=7B61FF&point=00FFA3&area=true&hide_border=false&border_color=7B61FF" width="95%"/>
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=utkarsh-aix&bg_color=0D1117&color=00FFA3&line=7B61FF&point=00FFA3&area=true&hide_border=false&border_color=7B61FF&cache_bypass=1" width="95%"/>
 </div>
 
 ---
