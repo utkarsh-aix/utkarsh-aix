@@ -181,12 +181,12 @@ End-to-end ML systems deployed as Dockerized FastAPI services. XGBoost engines w
 </div>
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=utkarsh-aix&show_icons=true&theme=dark&bg_color=0D1117&title_color=00FFA3&icon_color=7B61FF&text_color=E6EDF3&border_color=7B61FF&hide_border=false&count_private=true" height="180"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=utkarsh-aix&layout=compact&theme=dark&bg_color=0D1117&title_color=00FFA3&text_color=E6EDF3&border_color=7B61FF&langs_count=6" height="180"/>
+  <img src="https://github-stats-extended.vercel.app/api?username=utkarsh-aix&show_icons=true&theme=dark&bg_color=0D1117&title_color=00FFA3&icon_color=7B61FF&text_color=E6EDF3&border_color=7B61FF&hide_border=false&count_private=true" height="180"/>
+  <img src="https://github-stats-extended.vercel.app/api/top-langs/?username=utkarsh-aix&layout=compact&theme=dark&bg_color=0D1117&title_color=00FFA3&text_color=E6EDF3&border_color=7B61FF&langs_count=6" height="180"/>
 </div>
 
 <div align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF" width="60%"/>
+  <img src="https://streak-stats.demolab.com/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF" width="60%"/>
 </div>
 
 <br/>
