@@ -186,7 +186,7 @@ End-to-end ML systems deployed as Dockerized FastAPI services. XGBoost engines w
 </div>
 
 <div align="center">
-  <img src="./github-streak-stats.svg" width="60%"/>
+  <img src="https://github-readme-streak-stats-eight.vercel.app/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF&cache_bypass=2" width="60%"/>
 </div>
 
 <br/>
