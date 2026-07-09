@@ -22,11 +22,16 @@ jobs:
         with:
           username: utkarsh-aix
           token: ${{ secrets.GITHUB_TOKEN }}
+          theme: dark
           background: "0D1117"
           ring: "00FFA3"
           fire: "7B61FF"
           currStreakLabel: "00FFA3"
           stroke: "7B61FF"
+          currStreakNum: "FEFEFE"
+          sideNums: "FEFEFE"
+          sideLabels: "FEFEFE"
+          dates: "9E9E9E"
           output-path: github-streak-stats.svg
 
       - name: Commit and Push Changes
