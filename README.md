@@ -8,10 +8,6 @@
   <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=36&duration=3000&pause=1000&color=00FFA3&center=true&vCenter=true&width=600&height=70&lines=Utkarsh+Raj;AI+Engineer;Building+Real+AI+Products" alt="Typing SVG" />
 </a>
 
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=16&duration=4000&pause=500&color=7B61FF&center=true&vCenter=true&width=700&lines=M.Tech+Applied+AI+%40+NFSU+Gandhinagar;RAG+Systems+·+LLM+Agents+·+ML+APIs+in+Production;Open+to+AI%2FML+Engineer+Roles" alt="Subtitle" />
-</p>
-
 <br/>
 
 <p align="center"><strong>Contribution update:</strong> committed a live update to this repo and pushed it to GitHub.</p>
