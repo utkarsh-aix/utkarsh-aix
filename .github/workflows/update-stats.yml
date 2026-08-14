@@ -1,0 +1,51 @@
+name: Update GitHub Stats and Contribution Graph
+
+on:
+  schedule:
+    # Runs every 6 hours automatically
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/update-stats.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Generate GitHub Stats SVGs
+        env:
+          GITHUB_USERNAME: 'utkarsh-aix'
+          # If you have private repos/contributions, add GH_PAT secret to your repo settings
+          GH_PAT: ${{ secrets.GH_PAT || secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/generate_github_stats.py
+
+      - name: Commit and Push Updated Assets
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/
+          if git diff --staged --quiet; then
+            echo "No changes in stats SVGs to commit."
+          else
+            git commit -m "chore(stats): auto-update GitHub stats and contribution graph [skip ci]"
+            git push origin main
+          fi

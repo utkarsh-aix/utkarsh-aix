@@ -13,48 +13,50 @@
   </g>
 
   <!-- Progress Bar -->
-  
-    <g transform="translate(25, 60)">
-      <mask id="bar-mask">
-        <rect width="445" height="8" rx="4" fill="#FFFFFF"/>
-      </mask>
-      <rect width="445" height="8" rx="4" fill="#21262D"/>
-      <g mask="url(#bar-mask)">
-        <rect x="0.0" y="0" width="388.7" height="8" fill="#3572A5"/><rect x="388.7" y="0" width="29.8" height="8" fill="#F1E05A"/><rect x="418.5" y="0" width="13.9" height="8" fill="#555555"/><rect x="432.4" y="0" width="8.1" height="8" fill="#FED10A"/><rect x="440.5" y="0" width="2.3" height="8" fill="#F34B7D"/><rect x="442.8" y="0" width="2.2" height="8" fill="#E4CC98"/>
-      </g>
+  <g transform="translate(25, 65)">
+    <clipPath id="bar-clip">
+      <rect width="445" height="8" rx="4"/>
+    </clipPath>
+    <g clip-path="url(#bar-clip)">
+      <rect x="0.0" y="0" width="348.9" height="8" fill="#3572A5"/>
+    <rect x="348.9" y="0" width="63.2" height="8" fill="#DA5B0B"/>
+    <rect x="412.1" y="0" width="18.2" height="8" fill="#E34C26"/>
+    <rect x="430.3" y="0" width="9.3" height="8" fill="#563D7C"/>
+    <rect x="439.7" y="0" width="5.3" height="8" fill="#F1E05A"/>
     </g>
-    
+  </g>
 
-  <!-- Languages Legend (2 Columns) -->
-  
-        <g transform="translate(25, 95)">
-          <circle cx="5" cy="5" r="4.5" fill="#3572A5"/>
-          <text x="18" y="9" class="lang-text">Python 87.34%</text>
-        </g>
-        
-        <g transform="translate(245, 95)">
-          <circle cx="5" cy="5" r="4.5" fill="#F1E05A"/>
-          <text x="18" y="9" class="lang-text">JavaScript 6.70%</text>
-        </g>
-        
-        <g transform="translate(25, 123)">
-          <circle cx="5" cy="5" r="4.5" fill="#555555"/>
-          <text x="18" y="9" class="lang-text">C 3.12%</text>
-        </g>
-        
-        <g transform="translate(245, 123)">
-          <circle cx="5" cy="5" r="4.5" fill="#FED10A"/>
-          <text x="18" y="9" class="lang-text">Cython 1.83%</text>
-        </g>
-        
-        <g transform="translate(25, 151)">
-          <circle cx="5" cy="5" r="4.5" fill="#F34B7D"/>
-          <text x="18" y="9" class="lang-text">C++ 0.52%</text>
-        </g>
-        
-        <g transform="translate(245, 151)">
-          <circle cx="5" cy="5" r="4.5" fill="#E4CC98"/>
-          <text x="18" y="9" class="lang-text">Tcl 0.49%</text>
-        </g>
-        
+  <!-- Languages List (2 Columns) -->
+  <g transform="translate(25, 95)">
+
+      <g transform="translate(0, 0)">
+        <circle cx="5" cy="6" r="5" fill="#3572A5"/>
+        <text x="18" y="10" class="lang-text">Python</text>
+        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">78.4%</text>
+      </g>
+
+      <g transform="translate(220, 0)">
+        <circle cx="5" cy="6" r="5" fill="#DA5B0B"/>
+        <text x="18" y="10" class="lang-text">Jupyter Notebook</text>
+        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">14.2%</text>
+      </g>
+
+      <g transform="translate(0, 26)">
+        <circle cx="5" cy="6" r="5" fill="#E34C26"/>
+        <text x="18" y="10" class="lang-text">HTML</text>
+        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">4.1%</text>
+      </g>
+
+      <g transform="translate(220, 26)">
+        <circle cx="5" cy="6" r="5" fill="#563D7C"/>
+        <text x="18" y="10" class="lang-text">CSS</text>
+        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">2.1%</text>
+      </g>
+
+      <g transform="translate(0, 52)">
+        <circle cx="5" cy="6" r="5" fill="#F1E05A"/>
+        <text x="18" y="10" class="lang-text">JavaScript</text>
+        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">1.2%</text>
+      </g>
+  </g>
 </svg>
