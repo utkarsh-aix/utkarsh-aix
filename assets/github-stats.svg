@@ -35,7 +35,7 @@
         <polyline points="12 6 12 12 16 14"/>
       </svg>
       <text x="24" y="13" class="stat-label">Total Commits (last year):</text>
-      <text x="250" y="13" class="stat-val">82</text>
+      <text x="250" y="13" class="stat-val">87</text>
     </g>
 
     <!-- PRs -->
