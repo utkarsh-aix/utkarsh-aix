@@ -181,18 +181,18 @@ End-to-end ML systems deployed as Dockerized FastAPI services. XGBoost engines w
 </div>
 
 <div align="center">
-  <img src="https://github-stats-extended.vercel.app/api?username=utkarsh-aix&show_icons=true&theme=dark&bg_color=0D1117&title_color=00FFA3&icon_color=7B61FF&text_color=E6EDF3&border_color=7B61FF&hide_border=false&count_private=true&cache_bypass=1" height="180"/>
-  <img src="https://github-stats-extended.vercel.app/api/top-langs/?username=utkarsh-aix&layout=compact&theme=dark&bg_color=0D1117&title_color=00FFA3&text_color=E6EDF3&border_color=7B61FF&langs_count=6&cache_bypass=1" height="180"/>
+  <img src="./assets/github-stats.svg" height="180"/>
+  <img src="./assets/github-languages.svg" height="180"/>
 </div>
 
 <div align="center">
-  <img src="https://github-readme-streak-stats-eight.vercel.app/?user=utkarsh-aix&theme=dark&background=0D1117&ring=00FFA3&fire=7B61FF&currStreakLabel=00FFA3&border=7B61FF&cache_bypass=2" width="60%"/>
+  <img src="./assets/github-streak.svg" width="60%"/>
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=utkarsh-aix&bg_color=0D1117&color=00FFA3&line=7B61FF&point=00FFA3&area=true&hide_border=false&border_color=7B61FF&cache_bypass=1" width="95%"/>
+  <img src="./assets/github-activity.svg" width="95%"/>
 </div>
 
 ---
@@ -230,7 +230,7 @@ utkarsh = {
     "building"    : ["LLM scrapers", "POS data pipelines", "AI agents"],
     "learning"    : ["LangGraph multi-agent systems", "Fine-tuning (LoRA/QLoRA)", "Vertex AI"],
     "seeking"     : "Full-time AI/ML Engineer role",
-    "open_to"     : ["Remote", "Hybrid", "Ahmedabad", "Bangalore", "Mumbai",Pune, Gurugram, Noida],
+    "open_to"     : ["Remote", "Hybrid", "Ahmedabad", "Bangalore", "Mumbai", "Pune", "Gurugram", "Noida"],
     "contact"     : "teamutkarsh22@gmail.com"
 }
 ```
