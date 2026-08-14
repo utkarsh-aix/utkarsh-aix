@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="205" viewBox="0 0 495 205" fill="none">
+  <style>
+    .card-bg { fill: #0D1117; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
+    .title { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #00FFA3; }
+    .stat-label { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #FFFFFF; }
+    .stat-val { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 800; fill: #FFFFFF; text-anchor: end; }
+    .icon { fill: #7B61FF; }
+    .grade-letter { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 26px; font-weight: 800; fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; }
+    .grade-bg-circle { fill: #0B1E19; stroke: #12382C; stroke-width: 6; }
+    .grade-progress { fill: none; stroke: #00FFA3; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 238.8; stroke-dashoffset: 95.5; transform: rotate(-90deg); transform-origin: 0 0; }
+  </style>
+
+  <rect width="493" height="203" x="1" y="1" class="card-bg"/>
+
+  <!-- Title -->
+  <g transform="translate(25, 30)">
+    <text x="0" y="10" class="title">Utkarsh Raj's GitHub Stats</text>
+  </g>
+
+  <!-- Left Stats List -->
+  <g transform="translate(25, 62)">
+    <!-- Total Stars -->
+    <g transform="translate(0, 0)">
+      <path class="icon" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" transform="scale(0.9) translate(0, -1)"/>
+      <text x="22" y="10" class="stat-label">Total Stars Earned:</text>
+      <text x="220" y="10" class="stat-val">0</text>
+    </g>
+
+    <!-- Total Commits -->
+    <g transform="translate(0, 24)">
+      <path class="icon" d="M8 0a8 8 0 100 16A8 8 0 008 0zm.75 4.75a.75.75 0 00-1.5 0v3.5c0 .414.336.75.75.75h2.5a.75.75 0 000-1.5H8.75V4.75z" transform="scale(0.9) translate(0, -1)"/>
+      <text x="22" y="10" class="stat-label">Total Commits (last year):</text>
+      <text x="220" y="10" class="stat-val">79</text>
+    </g>
+
+    <!-- Total PRs -->
+    <g transform="translate(0, 48)">
+      <path class="icon" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm-1.25 8.75a2.25 2.25 0 104.5 0 2.25 2.25 0 00-4.5 0zm10 0a2.25 2.25 0 104.5 0 2.25 2.25 0 00-4.5 0z" transform="scale(0.9) translate(0, -1)"/>
+      <text x="22" y="10" class="stat-label">Total PRs:</text>
+      <text x="220" y="10" class="stat-val">0</text>
+    </g>
+
+    <!-- Total Issues -->
+    <g transform="translate(0, 72)">
+      <path class="icon" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9 3a1 1 0 11-2 0 1 1 0 012 0zm-.25-6.25a.75.75 0 00-1.5 0v3.5a.75.75 0 001.5 0v-3.5z" transform="scale(0.9) translate(0, -1)"/>
+      <text x="22" y="10" class="stat-label">Total Issues:</text>
+      <text x="220" y="10" class="stat-val">1</text>
+    </g>
+
+    <!-- Contributed To -->
+    <g transform="translate(0, 96)">
+      <path class="icon" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1h-8a1 1 0 00-1 1v6.708A2.486 2.486 0 014.5 9h8V1.5z" transform="scale(0.9) translate(0, -1)"/>
+      <text x="22" y="10" class="stat-label">Contributed to (last year):</text>
+      <text x="220" y="10" class="stat-val">2</text>
+    </g>
+  </g>
+
+  <!-- Right Grade Badge -->
+  <g transform="translate(395, 110)">
+    <circle cx="0" cy="0" r="38" class="grade-bg-circle"/>
+    <circle cx="0" cy="0" r="38" class="grade-progress"/>
+    <text x="0" y="0" class="grade-letter">A</text>
+  </g>
+</svg>

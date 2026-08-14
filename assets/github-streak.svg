@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="205" viewBox="0 0 600 205" fill="none">
+  <style>
+    .card-bg { fill: #0D1117; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
+    .streak-big-num { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 800; fill: #FFFFFF; text-anchor: middle; }
+    .streak-label { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #FFFFFF; text-anchor: middle; }
+    .streak-dates { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #8B949E; text-anchor: middle; }
+    .curr-streak-label { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 800; fill: #00FFA3; text-anchor: middle; }
+    .divider { stroke: #2D2755; stroke-width: 1.5; }
+    .ring-bg { fill: #0B1E19; stroke: #12382C; stroke-width: 5; }
+    .ring-glow { fill: none; stroke: #00FFA3; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 238.76; stroke-dashoffset: 0; }
+    .flame-icon { fill: #7B61FF; }
+  </style>
+
+  <rect width="598" height="203" x="1" y="1" class="card-bg"/>
+
+  <!-- Left: Total Contributions -->
+  <g transform="translate(115, 60)">
+    <text x="0" y="25" class="streak-big-num">1</text>
+    <text x="0" y="60" class="streak-label">Total Contributions</text>
+    <text x="0" y="85" class="streak-dates">Aug 15, 2025 - Present</text>
+  </g>
+
+  <!-- Divider 1 -->
+  <line x1="230" y1="35" x2="230" y2="170" class="divider"/>
+
+  <!-- Center: Current Streak -->
+  <g transform="translate(300, 75)">
+    <!-- Ring -->
+    <circle cx="0" cy="15" r="38" class="ring-bg"/>
+    <circle cx="0" cy="15" r="38" class="ring-glow" transform="rotate(-90 0 15)"/>
+    
+    <!-- Flame Badge at top of Ring -->
+    <g transform="translate(0, -25)">
+      <circle cx="0" cy="0" r="12" fill="#0D1117"/>
+      <path class="flame-icon" d="M12 0C7.5 4.5 4.5 9 4.5 13.5 4.5 17.64 7.86 21 12 21s7.5-3.36 7.5-7.5c0-4.5-3-9-7.5-13.5zm0 18c-2.48 0-4.5-2.02-4.5-4.5 0-2.31 1.76-4.97 4.5-7.9 2.74 2.93 4.5 5.59 4.5 7.9 0 2.48-2.02 4.5-4.5 4.5z" transform="translate(-10, -10) scale(0.85)"/>
+    </g>
+
+    <!-- Number inside ring -->
+    <text x="0" y="26" class="streak-big-num">1</text>
+
+    <!-- Labels below ring -->
+    <text x="0" y="75" class="curr-streak-label">Current Streak</text>
+    <text x="0" y="96" class="streak-dates">Aug 14</text>
+  </g>
+
+  <!-- Divider 2 -->
+  <line x1="370" y1="35" x2="370" y2="170" class="divider"/>
+
+  <!-- Right: Longest Streak -->
+  <g transform="translate(485, 60)">
+    <text x="0" y="25" class="streak-big-num">1</text>
+    <text x="0" y="60" class="streak-label">Longest Streak</text>
+    <text x="0" y="85" class="streak-dates">Aug 14 - Aug 14</text>
+  </g>
+</svg>
