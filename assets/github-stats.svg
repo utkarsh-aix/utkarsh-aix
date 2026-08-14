@@ -35,7 +35,7 @@
         <polyline points="12 6 12 12 16 14"/>
       </svg>
       <text x="24" y="13" class="stat-label">Total Commits (last year):</text>
-      <text x="250" y="13" class="stat-val">79</text>
+      <text x="250" y="13" class="stat-val">82</text>
     </g>
 
     <!-- PRs -->
@@ -68,7 +68,7 @@
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </svg>
       <text x="24" y="13" class="stat-label">Contributed to (last year):</text>
-      <text x="250" y="13" class="stat-val">2</text>
+      <text x="250" y="13" class="stat-val">16</text>
     </g>
   </g>
 

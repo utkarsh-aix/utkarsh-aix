@@ -16,7 +16,7 @@
 
   <!-- Horizontal Grid lines -->
   <line x1="65" y1="65" x2="860" y2="65" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
-  <text x="55" y="69" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">1</text>
+  <text x="55" y="69" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">3</text>
   
   <line x1="65" y1="275" x2="860" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
   <text x="55" y="279" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">0</text>
