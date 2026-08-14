@@ -7,7 +7,7 @@
     .icon { fill: none; stroke: #7B61FF; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
     .grade-letter { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 26px; font-weight: 800; fill: #FFFFFF; text-anchor: middle; dominant-baseline: central; }
     .grade-bg-circle { fill: #0B1E19; stroke: #12382C; stroke-width: 6; }
-    .grade-progress { fill: none; stroke: #00FFA3; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 238.8; stroke-dashoffset: 180; transform: rotate(-45deg); transform-origin: 0 0; }
+    .grade-progress { fill: none; stroke: #00FFA3; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 238.8; stroke-dashoffset: 160; transform: rotate(-45deg); transform-origin: 0 0; }
   </style>
 
   <rect width="493" height="203" x="1" y="1" class="card-bg"/>
@@ -35,7 +35,7 @@
         <polyline points="12 6 12 12 16 14"/>
       </svg>
       <text x="24" y="13" class="stat-label">Total Commits (last year):</text>
-      <text x="250" y="13" class="stat-val">79</text>
+      <text x="250" y="13" class="stat-val">82</text>
     </g>
 
     <!-- PRs -->
@@ -68,7 +68,7 @@
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </svg>
       <text x="24" y="13" class="stat-label">Contributed to (last year):</text>
-      <text x="250" y="13" class="stat-val">2</text>
+      <text x="250" y="13" class="stat-val">16</text>
     </g>
   </g>
 
