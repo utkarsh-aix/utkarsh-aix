@@ -181,18 +181,20 @@ End-to-end ML systems deployed as Dockerized FastAPI services. XGBoost engines w
 </div>
 
 <div align="center">
-  <img src="./assets/github-stats.svg" height="180"/>
-  <img src="./assets/github-languages.svg" height="180"/>
-</div>
-
-<div align="center">
-  <img src="./assets/github-streak.svg" width="60%"/>
+  <img src="./assets/github-stats.svg" width="49%"/>
+  <img src="./assets/github-languages.svg" width="49%"/>
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="./assets/github-activity.svg" width="95%"/>
+  <img src="./assets/github-streak.svg" width="65%"/>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="./assets/github-activity.svg" width="100%"/>
 </div>
 
 ---

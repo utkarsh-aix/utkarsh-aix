@@ -1,51 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="205" viewBox="0 0 600 205" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" width="650" height="215" viewBox="0 0 650 215" fill="none">
   <style>
-    .card-bg { fill: #0D1117; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
-    .streak-big-num { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 800; fill: #FFFFFF; text-anchor: middle; }
-    .streak-label { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #FFFFFF; text-anchor: middle; }
-    .streak-dates { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 500; fill: #8B949E; text-anchor: middle; }
-    .curr-streak-label { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 800; fill: #00FFA3; text-anchor: middle; }
-    .divider { stroke: #2D2755; stroke-width: 1.5; }
-    .ring-bg { fill: #0B1E19; stroke: #12382C; stroke-width: 5; }
-    .ring-glow { fill: none; stroke: #00FFA3; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 238.76; stroke-dashoffset: 0; }
+    .card-bg { fill: #07090E; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
+    .streak-big-num { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 38px; font-weight: 800; fill: #FFFFFF; text-anchor: middle; }
+    .streak-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 700; fill: #FFFFFF; text-anchor: middle; }
+    .streak-dates { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; font-weight: 500; fill: #8B949E; text-anchor: middle; }
+    .curr-streak-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 800; fill: #00FFA3; text-anchor: middle; }
+    .divider { stroke: #8B949E; stroke-width: 1; stroke-opacity: 0.5; }
+    .ring-bg { fill: none; stroke: #12382C; stroke-width: 5; }
+    .ring-glow { fill: none; stroke: #00FFA3; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 238.76; stroke-dashoffset: 40; }
     .flame-icon { fill: #7B61FF; }
   </style>
 
-  <rect width="598" height="203" x="1" y="1" class="card-bg"/>
+  <rect width="648" height="213" x="1" y="1" class="card-bg"/>
 
   <!-- Left: Total Contributions -->
-  <g transform="translate(115, 60)">
-    <text x="0" y="25" class="streak-big-num">123</text>
+  <g transform="translate(130, 70)">
+    <text x="0" y="25" class="streak-big-num">119</text>
     <text x="0" y="60" class="streak-label">Total Contributions</text>
-    <text x="0" y="85" class="streak-dates">Aug 10, 2025 - Present</text>
+    <text x="0" y="85" class="streak-dates">Aug 27, 2025 - Present</text>
   </g>
 
   <!-- Divider 1 -->
-  <line x1="230" y1="35" x2="230" y2="170" class="divider"/>
+  <line x1="260" y1="40" x2="260" y2="175" class="divider"/>
 
   <!-- Center: Current Streak -->
-  <g transform="translate(300, 60)">
+  <g transform="translate(325, 65)">
     <!-- Ring -->
-    <g transform="translate(0, 15)">
+    <g transform="translate(0, 18)">
       <circle cx="0" cy="0" r="38" class="ring-bg"/>
       <circle cx="0" cy="0" r="38" class="ring-glow"/>
-      <!-- Flame Icon -->
-      <svg class="flame-icon" viewBox="0 0 16 16" width="22" height="22" x="-11" y="-28">
-        <path d="M8.28 0a.75.75 0 0 1 .72.5c.34.98 1.13 2.1 2.06 3.03 1.05 1.06 2.44 2.13 2.44 4.47 0 2.94-2.39 5.5-5.5 5.5S2.5 10.94 2.5 8c0-1.84.82-3.3 1.94-4.57.94-1.07 2.05-2.03 2.84-2.85A13.06 13.06 0 0 0 8.28 0ZM8 2.37C7.2 3.2 6.18 4.14 5.35 5.08 4.4 6.16 3.8 7.23 3.8 8c0 2.22 1.88 4.2 4.2 4.2s4.2-1.98 4.2-4.2c0-1.74-1.03-2.6-1.95-3.52-.77-.77-1.46-1.64-1.87-2.48A10.87 10.87 0 0 1 8 2.37Z"/>
-      </svg>
-      <text x="0" y="10" class="streak-big-num" style="font-size: 26px;">1</text>
+      <!-- Flame Icon at Top -->
+      <g transform="translate(0, -38)">
+        <circle cx="0" cy="0" r="14" fill="#07090E"/>
+        <svg class="flame-icon" viewBox="0 0 16 16" width="18" height="18" x="-9" y="-9">
+          <path d="M8.28 0a.75.75 0 0 1 .72.5c.34.98 1.13 2.1 2.06 3.03 1.05 1.06 2.44 2.13 2.44 4.47 0 2.94-2.39 5.5-5.5 5.5S2.5 10.94 2.5 8c0-1.84.82-3.3 1.94-4.57.94-1.07 2.05-2.03 2.84-2.85A13.06 13.06 0 0 0 8.28 0ZM8 2.37C7.2 3.2 6.18 4.14 5.35 5.08 4.4 6.16 3.8 7.23 3.8 8c0 2.22 1.88 4.2 4.2 4.2s4.2-1.98 4.2-4.2c0-1.74-1.03-2.6-1.95-3.52-.77-.77-1.46-1.64-1.87-2.48A10.87 10.87 0 0 1 8 2.37Z"/>
+        </svg>
+      </g>
+      <text x="0" y="9" class="streak-big-num" style="font-size: 32px;">0</text>
     </g>
-    <text x="0" y="80" class="curr-streak-label">Current Streak</text>
-    <text x="0" y="100" class="streak-dates">Aug 14, 2026 - Aug 14, 2026</text>
+    <text x="0" y="85" class="curr-streak-label">Current Streak</text>
+    <text x="0" y="105" class="streak-dates">Aug 14</text>
   </g>
 
   <!-- Divider 2 -->
-  <line x1="370" y1="35" x2="370" y2="170" class="divider"/>
+  <line x1="390" y1="40" x2="390" y2="175" class="divider"/>
 
   <!-- Right: Longest Streak -->
-  <g transform="translate(485, 60)">
+  <g transform="translate(520, 70)">
     <text x="0" y="25" class="streak-big-num">3</text>
     <text x="0" y="60" class="streak-label">Longest Streak</text>
-    <text x="0" y="85" class="streak-dates">Apr 03, 2026 - Apr 05, 2026</text>
+    <text x="0" y="85" class="streak-dates">Apr 3 - Apr 5</text>
   </g>
 </svg>

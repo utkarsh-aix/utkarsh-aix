@@ -1,29 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="495" height="205" viewBox="0 0 495 205" fill="none">
   <style>
-    .card-bg { fill: #0D1117; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
-    .title { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #00FFA3; }
-    .lang-text { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 700; fill: #FFFFFF; }
+    .card-bg { fill: #07090E; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
+    .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #00FFA3; }
+    .lang-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; font-weight: 600; fill: #FFFFFF; }
   </style>
 
   <rect width="493" height="203" x="1" y="1" class="card-bg"/>
 
   <!-- Title -->
   <g transform="translate(25, 30)">
-    <text x="0" y="10" class="title">Most Used Languages</text>
+    <text x="0" y="8" class="title">Most Used Languages</text>
   </g>
 
   <!-- Progress Bar -->
-  <g transform="translate(25, 65)">
+  <g transform="translate(25, 62)">
     <clipPath id="bar-clip">
       <rect width="445" height="8" rx="4"/>
     </clipPath>
     <g clip-path="url(#bar-clip)">
-      <rect x="0.0" y="0" width="372.9" height="8" fill="#3572A5"/>
-    <rect x="372.9" y="0" width="29.4" height="8" fill="#f1e05a"/>
-    <rect x="402.3" y="0" width="26.7" height="8" fill="#555555"/>
-    <rect x="429.0" y="0" width="8.0" height="8" fill="#fedf5b"/>
-    <rect x="437.0" y="0" width="2.2" height="8" fill="#f34b7d"/>
-    <rect x="439.2" y="0" width="2.2" height="8" fill="#e4cc98"/>
+      <rect x="0.0" y="0" width="388.7" height="8" fill="#3572A5"/>
+    <rect x="388.7" y="0" width="29.8" height="8" fill="#F1E05A"/>
+    <rect x="418.5" y="0" width="13.9" height="8" fill="#555555"/>
+    <rect x="432.4" y="0" width="8.1" height="8" fill="#FED10A"/>
+    <rect x="440.5" y="0" width="2.3" height="8" fill="#F34B7D"/>
+    <rect x="442.8" y="0" width="2.2" height="8" fill="#E4CC98"/>
     </g>
   </g>
 
@@ -31,39 +31,39 @@
   <g transform="translate(25, 95)">
 
       <g transform="translate(0, 0)">
-        <circle cx="5" cy="6" r="5" fill="#3572A5"/>
-        <text x="18" y="10" class="lang-text">Python</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">83.8%</text>
+        <circle cx="5" cy="6" r="4.5" fill="#3572A5"/>
+        <text x="16" y="10" class="lang-text">Python</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">87.34%</text>
       </g>
 
-      <g transform="translate(220, 0)">
-        <circle cx="5" cy="6" r="5" fill="#f1e05a"/>
-        <text x="18" y="10" class="lang-text">JavaScript</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">6.6%</text>
+      <g transform="translate(200, 0)">
+        <circle cx="5" cy="6" r="4.5" fill="#F1E05A"/>
+        <text x="16" y="10" class="lang-text">JavaScript</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">6.70%</text>
       </g>
 
       <g transform="translate(0, 26)">
-        <circle cx="5" cy="6" r="5" fill="#555555"/>
-        <text x="18" y="10" class="lang-text">C</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">6.0%</text>
+        <circle cx="5" cy="6" r="4.5" fill="#555555"/>
+        <text x="16" y="10" class="lang-text">C</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">3.12%</text>
       </g>
 
-      <g transform="translate(220, 26)">
-        <circle cx="5" cy="6" r="5" fill="#fedf5b"/>
-        <text x="18" y="10" class="lang-text">Cython</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">1.8%</text>
+      <g transform="translate(200, 26)">
+        <circle cx="5" cy="6" r="4.5" fill="#FED10A"/>
+        <text x="16" y="10" class="lang-text">Cython</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">1.83%</text>
       </g>
 
       <g transform="translate(0, 52)">
-        <circle cx="5" cy="6" r="5" fill="#f34b7d"/>
-        <text x="18" y="10" class="lang-text">C++</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">0.5%</text>
+        <circle cx="5" cy="6" r="4.5" fill="#F34B7D"/>
+        <text x="16" y="10" class="lang-text">C++</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">0.52%</text>
       </g>
 
-      <g transform="translate(220, 52)">
-        <circle cx="5" cy="6" r="5" fill="#e4cc98"/>
-        <text x="18" y="10" class="lang-text">Tcl</text>
-        <text x="190" y="10" class="lang-text" style="font-weight: 500; fill: #8B949E; text-anchor: end;">0.5%</text>
+      <g transform="translate(200, 52)">
+        <circle cx="5" cy="6" r="4.5" fill="#E4CC98"/>
+        <text x="16" y="10" class="lang-text">Tcl</text>
+        <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">0.49%</text>
       </g>
   </g>
 </svg>

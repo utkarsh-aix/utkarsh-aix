@@ -1,81 +1,126 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="850" height="360" viewBox="0 0 850 360" fill="none">
-  <defs>
-    <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#7B61FF" stop-opacity="0.0"/>
-    </linearGradient>
-  </defs>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="340" viewBox="0 0 900 340" fill="none">
   <style>
-    .card-bg { fill: #0D1117; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
-    .title { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; fill: #00FFA3; text-anchor: middle; }
-    .axis-title { font-family: JetBrains Mono, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 700; fill: #00FFA3; text-anchor: middle; }
+    .card-bg { fill: #07090E; stroke: #7B61FF; stroke-width: 1.5; rx: 10px; }
+    .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; fill: #00FFA3; text-anchor: middle; }
+    .axis-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 700; fill: #00FFA3; text-anchor: middle; }
     .chart-line { fill: none; stroke: #7B61FF; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
   </style>
 
-  <rect width="848" height="358" x="1" y="1" class="card-bg"/>
+  <rect width="898" height="338" x="1" y="1" class="card-bg"/>
 
   <!-- Centered Title -->
-  <text x="425.0" y="36" class="title">Utkarsh Raj's Contribution Activity Graph</text>
+  <text x="450" y="36" class="title">Utkarsh Raj's Contribution Graph</text>
 
   <!-- Y-Axis Title (Rotated) -->
-  <text x="-175.0" y="24" transform="rotate(-90)" class="axis-title">Contributions</text>
+  <text x="-170" y="24" transform="rotate(-90)" class="axis-title">Contributions</text>
 
   <!-- Horizontal Grid lines -->
-  <line x1="75" y1="65" x2="800" y2="65" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-  <text x="63" y="69" font-family="JetBrains Mono, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">4</text>
+  <line x1="65" y1="65" x2="860" y2="65" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="55" y="69" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">1</text>
   
-  <line x1="75" y1="285" x2="800" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-  <text x="63" y="289" font-family="JetBrains Mono, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">0</text>
+  <line x1="65" y1="275" x2="860" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="55" y="279" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">0</text>
 
-  <!-- Vertical Grid and Labels -->
-  <line x1="75.0" y1="65" x2="75.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="75.0" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">07-15</text>
-    <line x1="99.2" y1="65" x2="99.2" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="123.3" y1="65" x2="123.3" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="147.5" y1="65" x2="147.5" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="171.7" y1="65" x2="171.7" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="171.7" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">07-19</text>
-    <line x1="195.8" y1="65" x2="195.8" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="220.0" y1="65" x2="220.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="244.2" y1="65" x2="244.2" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="268.3" y1="65" x2="268.3" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="268.3" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">07-23</text>
-    <line x1="292.5" y1="65" x2="292.5" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="316.7" y1="65" x2="316.7" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="340.8" y1="65" x2="340.8" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="365.0" y1="65" x2="365.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="365.0" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">07-27</text>
-    <line x1="389.2" y1="65" x2="389.2" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="413.3" y1="65" x2="413.3" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="437.5" y1="65" x2="437.5" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="461.7" y1="65" x2="461.7" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="461.7" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">07-31</text>
-    <line x1="485.8" y1="65" x2="485.8" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="510.0" y1="65" x2="510.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="534.2" y1="65" x2="534.2" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="558.3" y1="65" x2="558.3" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="558.3" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">08-04</text>
-    <line x1="582.5" y1="65" x2="582.5" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="606.7" y1="65" x2="606.7" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="630.8" y1="65" x2="630.8" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="655.0" y1="65" x2="655.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="655.0" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">08-08</text>
-    <line x1="679.2" y1="65" x2="679.2" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="703.3" y1="65" x2="703.3" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="727.5" y1="65" x2="727.5" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="751.7" y1="65" x2="751.7" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="751.7" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">08-12</text>
-    <line x1="775.8" y1="65" x2="775.8" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="800.0" y1="65" x2="800.0" y2="285" stroke="#16382C" stroke-width="1" stroke-dasharray="2,2"/>
-    <text x="800.0" y="305" font-family="JetBrains Mono, sans-serif" font-size="10px" font-weight="700" fill="#00FFA3" text-anchor="middle">08-14</text>
+  <!-- Vertical Grid and Day Numbers -->
+  <line x1="65.0" y1="65" x2="65.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="65.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">15</text>
+    <line x1="91.5" y1="65" x2="91.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="91.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">16</text>
+    <line x1="118.0" y1="65" x2="118.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="118.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">17</text>
+    <line x1="144.5" y1="65" x2="144.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="144.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">18</text>
+    <line x1="171.0" y1="65" x2="171.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="171.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">19</text>
+    <line x1="197.5" y1="65" x2="197.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="197.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">20</text>
+    <line x1="224.0" y1="65" x2="224.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="224.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">21</text>
+    <line x1="250.5" y1="65" x2="250.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="250.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">22</text>
+    <line x1="277.0" y1="65" x2="277.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="277.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">23</text>
+    <line x1="303.5" y1="65" x2="303.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="303.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">24</text>
+    <line x1="330.0" y1="65" x2="330.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="330.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">25</text>
+    <line x1="356.5" y1="65" x2="356.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="356.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">26</text>
+    <line x1="383.0" y1="65" x2="383.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="383.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">27</text>
+    <line x1="409.5" y1="65" x2="409.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="409.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">28</text>
+    <line x1="436.0" y1="65" x2="436.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="436.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">29</text>
+    <line x1="462.5" y1="65" x2="462.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="462.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">30</text>
+    <line x1="489.0" y1="65" x2="489.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="489.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">31</text>
+    <line x1="515.5" y1="65" x2="515.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="515.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">1</text>
+    <line x1="542.0" y1="65" x2="542.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="542.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">2</text>
+    <line x1="568.5" y1="65" x2="568.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="568.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">3</text>
+    <line x1="595.0" y1="65" x2="595.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="595.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">4</text>
+    <line x1="621.5" y1="65" x2="621.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="621.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">5</text>
+    <line x1="648.0" y1="65" x2="648.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="648.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">6</text>
+    <line x1="674.5" y1="65" x2="674.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="674.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">7</text>
+    <line x1="701.0" y1="65" x2="701.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="701.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">8</text>
+    <line x1="727.5" y1="65" x2="727.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="727.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">9</text>
+    <line x1="754.0" y1="65" x2="754.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="754.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">10</text>
+    <line x1="780.5" y1="65" x2="780.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="780.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">11</text>
+    <line x1="807.0" y1="65" x2="807.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="807.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">12</text>
+    <line x1="833.5" y1="65" x2="833.5" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="833.5" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">13</text>
+    <line x1="860.0" y1="65" x2="860.0" y2="275" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="860.0" y="293" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="middle">14</text>
 
-  <!-- Area Fill -->
-  <path d="M 75.0 285.0 L 99.2 285.0 L 123.3 285.0 L 147.5 285.0 L 171.7 285.0 L 195.8 285.0 L 220.0 285.0 L 244.2 285.0 L 268.3 285.0 L 292.5 285.0 L 316.7 285.0 L 340.8 285.0 L 365.0 285.0 L 389.2 285.0 L 413.3 285.0 L 437.5 285.0 L 461.7 285.0 L 485.8 285.0 L 510.0 285.0 L 534.2 285.0 L 558.3 285.0 L 582.5 285.0 L 606.7 285.0 L 630.8 285.0 L 655.0 285.0 L 679.2 285.0 L 703.3 285.0 L 727.5 285.0 L 751.7 285.0 L 775.8 285.0 L 800.0 65.0 L 800.0 285.0 L 75.0 285.0 Z" fill="url(#area-grad)"/>
+  <!-- Bottom Days Label -->
+  <text x="450" y="313" class="axis-title">Days</text>
 
   <!-- Line -->
-  <path d="M 75.0 285.0 L 99.2 285.0 L 123.3 285.0 L 147.5 285.0 L 171.7 285.0 L 195.8 285.0 L 220.0 285.0 L 244.2 285.0 L 268.3 285.0 L 292.5 285.0 L 316.7 285.0 L 340.8 285.0 L 365.0 285.0 L 389.2 285.0 L 413.3 285.0 L 437.5 285.0 L 461.7 285.0 L 485.8 285.0 L 510.0 285.0 L 534.2 285.0 L 558.3 285.0 L 582.5 285.0 L 606.7 285.0 L 630.8 285.0 L 655.0 285.0 L 679.2 285.0 L 703.3 285.0 L 727.5 285.0 L 751.7 285.0 L 775.8 285.0 L 800.0 65.0" class="chart-line"/>
+  <path d="M 65.0 275.0 L 91.5 275.0 L 118.0 275.0 L 144.5 275.0 L 171.0 275.0 L 197.5 275.0 L 224.0 275.0 L 250.5 275.0 L 277.0 275.0 L 303.5 275.0 L 330.0 275.0 L 356.5 275.0 L 383.0 275.0 L 409.5 275.0 L 436.0 275.0 L 462.5 275.0 L 489.0 275.0 L 515.5 275.0 L 542.0 275.0 L 568.5 275.0 L 595.0 275.0 L 621.5 275.0 L 648.0 275.0 L 674.5 275.0 L 701.0 275.0 L 727.5 275.0 L 754.0 275.0 L 780.5 275.0 L 807.0 275.0 L 833.5 275.0 L 860.0 65.0" class="chart-line"/>
 
-  <!-- Point dots -->
-  <circle cx="800.0" cy="65.0" r="4" fill="#00FFA3" stroke="#7B61FF" stroke-width="2"/>
+  <!-- Cyan Dots on Each Day -->
+  <circle cx="65.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="91.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="118.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="144.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="171.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="197.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="224.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="250.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="277.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="303.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="330.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="356.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="383.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="409.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="436.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="462.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="489.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="515.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="542.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="568.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="595.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="621.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="648.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="674.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="701.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="727.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="754.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="780.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="807.0" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="833.5" cy="275.0" r="3.5" fill="#00FFA3"/>
+    <circle cx="860.0" cy="65.0" r="3.5" fill="#00FFA3"/>
 </svg>
