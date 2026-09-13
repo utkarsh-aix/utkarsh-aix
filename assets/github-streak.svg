@@ -15,9 +15,9 @@
 
   <!-- Left: Total Contributions -->
   <g transform="translate(130, 70)">
-    <text x="0" y="25" class="streak-big-num">132</text>
+    <text x="0" y="25" class="streak-big-num">120</text>
     <text x="0" y="60" class="streak-label">Total Contributions</text>
-    <text x="0" y="85" class="streak-dates">Aug 27, 2025 - Present</text>
+    <text x="0" y="85" class="streak-dates">Aug 10, 2025 - Present</text>
   </g>
 
   <!-- Divider 1 -->
@@ -39,7 +39,7 @@
       <text x="0" y="9" class="streak-big-num" style="font-size: 32px;">1</text>
     </g>
     <text x="0" y="85" class="curr-streak-label">Current Streak</text>
-    <text x="0" y="105" class="streak-dates">Sep 13</text>
+    <text x="0" y="105" class="streak-dates">Aug 14</text>
   </g>
 
   <!-- Divider 2 -->
@@ -49,6 +49,6 @@
   <g transform="translate(520, 70)">
     <text x="0" y="25" class="streak-big-num">3</text>
     <text x="0" y="60" class="streak-label">Longest Streak</text>
-    <text x="0" y="85" class="streak-dates">Apr 03 - Apr 05</text>
+    <text x="0" y="85" class="streak-dates">Jun 22 - Jun 24</text>
   </g>
 </svg>
