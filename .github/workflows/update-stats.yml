@@ -6,40 +6,97 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
+# Prevent the workflow from recursively triggering itself via the push.
+# The commit message uses [skip ci], but this is a belt-and-suspenders guard.
+concurrency:
+  group: stats-update
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
 jobs:
   update-stats:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Use the PAT for checkout so the subsequent push is authenticated.
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
+      # -----------------------------------------------------------------------
+      # Diagnostic: report environment before running the script
+      # -----------------------------------------------------------------------
+      - name: Pre-flight Diagnostics
+        run: |
+          echo "===================================================="
+          echo "Run timestamp  : $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Runner OS      : $RUNNER_OS"
+          echo "Python version : $(python --version)"
+          echo "Repository     : $GITHUB_REPOSITORY"
+          echo "Branch         : $GITHUB_REF_NAME"
+          echo "GH_PAT present : ${{ secrets.GH_PAT != '' && 'YES' || 'NO — private contributions will be missing' }}"
+          echo "===================================================="
+          echo ""
+          echo "[README REFS CHECK]"
+          grep -o 'src="[^"]*assets[^"]*"' README.md || echo "(no asset srcs found)"
+
+      # -----------------------------------------------------------------------
+      # Generate the SVGs — exits non-zero if the API call fails completely
+      # -----------------------------------------------------------------------
       - name: Generate GitHub Stats SVGs
         env:
           GITHUB_USERNAME: 'utkarsh-aix'
-          # If you have private repos/contributions, add GH_PAT secret to your repo settings
-          GH_PAT: ${{ secrets.GH_PAT || secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          # GH_PAT is a Personal Access Token with scopes: read:user, repo
+          # Without it only public contributions appear.
+          GH_PAT: ${{ secrets.GH_PAT }}
+          # GITHUB_TOKEN is always available but cannot see private contributions.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/generate_github_stats.py
+        # Do NOT continue silently if the script fails.
+        # The script itself calls sys.exit(1) on critical errors.
 
+      # -----------------------------------------------------------------------
+      # Verify the outputs exist before trying to commit
+      # -----------------------------------------------------------------------
+      - name: Verify Generated Assets
+        run: |
+          echo "[ASSET VERIFICATION]"
+          for f in assets/github-stats.svg assets/github-languages.svg assets/github-streak.svg assets/github-activity.svg; do
+            if [ -f "$f" ]; then
+              echo "  [OK]    $f  ($(wc -c < "$f") bytes)"
+            else
+              echo "  [ERROR] $f  — FILE MISSING"
+              exit 1
+            fi
+          done
+
+      # -----------------------------------------------------------------------
+      # Commit only if content changed; never commit if nothing is new
+      # -----------------------------------------------------------------------
       - name: Commit and Push Updated Assets
         run: |
-          git config --global user.name "github-actions[bot]"
+          git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git add assets/
+
           if git diff --staged --quiet; then
-            echo "No changes in stats SVGs to commit."
+            echo "[COMMIT] No changes detected in assets/ — skipping commit."
+            echo "         This is expected when data has not changed since the last run."
           else
+            echo "[COMMIT] Changes detected — committing updated assets."
+            git diff --staged --stat
             git commit -m "chore(stats): auto-update GitHub stats and contribution graph [skip ci]"
-            git push origin main
+            git push origin HEAD
+            echo "[COMMIT] Push complete."
           fi

@@ -1,15 +1,46 @@
+"""
+generate_github_stats.py
+Generates github-stats.svg, github-languages.svg, github-streak.svg, github-activity.svg
+using GitHub's GraphQL API with full diagnostic logging.
+
+Required env vars:
+  GITHUB_USERNAME  - GitHub username (default: utkarsh-aix)
+  GH_PAT           - Personal Access Token with scopes: read:user, repo
+                     (The auto-injected GITHUB_TOKEN does NOT expose private
+                      contributions — a real PAT is required for accurate data.)
+"""
+
 import os
 import sys
 import json
 import urllib.request
+import urllib.error
 from datetime import datetime, timezone, timedelta
 
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
 USERNAME = os.environ.get("GITHUB_USERNAME", "utkarsh-aix")
-TOKEN = os.environ.get("GH_PAT") or os.environ.get("GITHUB_TOKEN") or ""
 
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
+# Prefer an explicit PAT; the built-in GITHUB_TOKEN can only see public data.
+TOKEN = os.environ.get("GH_PAT") or os.environ.get("PAT_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
+
+# Determine whether we have a real PAT (non-empty and not the actions default).
+# We can't detect exactly, but we warn the user about private-contribution limits.
+USING_ACTIONS_DEFAULT_TOKEN = (
+    not os.environ.get("GH_PAT") and
+    not os.environ.get("PAT_TOKEN") and
+    bool(os.environ.get("GITHUB_TOKEN"))
+)
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
+OUTPUT_DIR = os.path.join(REPO_ROOT, "assets")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+# ---------------------------------------------------------------------------
+# GraphQL queries
+# ---------------------------------------------------------------------------
 MAIN_QUERY = """
 query($login: String!) {
   user(login: $login) {
@@ -32,7 +63,6 @@ query($login: String!) {
           contributionDays {
             contributionCount
             date
-            weekday
           }
         }
       }
@@ -72,7 +102,6 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
           contributionDays {
             contributionCount
             date
-            weekday
           }
         }
       }
@@ -81,115 +110,190 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 }
 """
 
-def make_graphql_req(query, variables):
+# ---------------------------------------------------------------------------
+# API helpers
+# ---------------------------------------------------------------------------
+def graphql(query, variables):
+    """Execute a GitHub GraphQL request and return the parsed JSON."""
+    payload = json.dumps({"query": query, "variables": variables}).encode("utf-8")
     req = urllib.request.Request(
         "https://api.github.com/graphql",
-        data=json.dumps({"query": query, "variables": variables}).encode("utf-8"),
+        data=payload,
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "antigravity-stats-generator",
-            "Authorization": f"bearer {TOKEN}"
-        }
+            "User-Agent": "github-stats-generator/2.0",
+            "Authorization": f"bearer {TOKEN}",
+        },
     )
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-def fetch_data():
-    if not TOKEN:
-        print("[WARN] No GITHUB_TOKEN or GH_PAT provided. Falling back to default/cached profile data.")
-        return None
-
     try:
-        data = make_graphql_req(MAIN_QUERY, {"login": USERNAME})
-        if "errors" in data:
-            print(f"[ERROR] GraphQL errors: {data['errors']}")
-            return None
-        user_data = data.get("data", {}).get("user")
-        if not user_data:
-            return None
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            raw = resp.read().decode("utf-8")
+            rate_remaining = resp.headers.get("X-RateLimit-Remaining", "?")
+            rate_reset      = resp.headers.get("X-RateLimit-Reset", "?")
+            print(f"    [API] Rate-limit remaining: {rate_remaining}  reset: {rate_reset}")
+            return json.loads(raw)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"HTTP {e.code} from GitHub API: {body[:400]}") from e
 
-        years = user_data.get("contributionsCollection", {}).get("contributionYears", [])
-        all_collections = []
-        
-        for y in years:
-            try:
-                from_date = f"{y}-01-01T00:00:00Z"
-                to_date = f"{y}-12-31T23:59:59Z"
-                y_data = make_graphql_req(YEAR_QUERY, {"login": USERNAME, "from": from_date, "to": to_date})
-                col = y_data.get("data", {}).get("user", {}).get("contributionsCollection")
-                if col:
-                    all_collections.append(col)
-            except Exception as ey:
-                print(f"[WARN] Could not fetch data for year {y}: {ey}")
+# ---------------------------------------------------------------------------
+# Data fetching
+# ---------------------------------------------------------------------------
+def fetch_data():
+    # --- Diagnostic header --------------------------------------------------
+    print("=" * 60)
+    print(f"[DIAG] Username          : {USERNAME}")
+    print(f"[DIAG] Token present     : {'YES' if TOKEN else 'NO — cannot query API'}")
+    if USING_ACTIONS_DEFAULT_TOKEN:
+        print("[DIAG] Token type        : GITHUB_TOKEN (actions default)")
+        print("[DIAG] WARNING           : Private contributions will NOT be counted.")
+        print("[DIAG] FIX               : Add a GH_PAT secret with scopes read:user, repo.")
+    elif TOKEN:
+        print("[DIAG] Token type        : Custom PAT / GH_PAT")
+    print(f"[DIAG] Output directory  : {OUTPUT_DIR}")
+    print(f"[DIAG] Run timestamp     : {datetime.now(timezone.utc).isoformat()}")
+    print("=" * 60)
 
-        user_data["all_year_collections"] = all_collections
-        return user_data
-    except Exception as e:
-        print(f"[ERROR] Failed to fetch data from GitHub API: {e}")
+    if not TOKEN:
+        print("[ERROR] No token available. Cannot fetch live data.")
+        print("[ERROR] Set the GH_PAT secret in repository Settings → Secrets → Actions.")
         return None
 
+    # --- Main user query ----------------------------------------------------
+    print(f"\n[FETCH] Querying user profile for '{USERNAME}' ...")
+    try:
+        data = graphql(MAIN_QUERY, {"login": USERNAME})
+    except RuntimeError as e:
+        print(f"[ERROR] Main query failed: {e}")
+        return None
+
+    if "errors" in data:
+        print(f"[ERROR] GraphQL errors in main query: {data['errors']}")
+        return None
+
+    user_data = data.get("data", {}).get("user")
+    if not user_data:
+        print(f"[ERROR] No user data returned for '{USERNAME}'. Check username spelling.")
+        return None
+
+    print(f"[FETCH] User found       : {user_data.get('name') or user_data.get('login')}")
+    print(f"[FETCH] Account created  : {user_data.get('createdAt', 'unknown')}")
+
+    main_coll = user_data.get("contributionsCollection", {})
+    contribution_years = main_coll.get("contributionYears", [])
+    print(f"[FETCH] Contribution years from API: {contribution_years}")
+    print(f"[FETCH] Last-year commits (public) : {main_coll.get('totalCommitContributions', 0)}")
+    print(f"[FETCH] Last-year restricted       : {main_coll.get('restrictedContributionsCount', 0)}")
+    print(f"[FETCH] Last-year calendar total   : {main_coll.get('contributionCalendar', {}).get('totalContributions', 0)}")
+
+    repos = user_data.get("repositories", {}).get("nodes", [])
+    print(f"[FETCH] Repositories returned      : {len(repos)}")
+
+    # --- Per-year contribution queries --------------------------------------
+    now_utc = datetime.now(timezone.utc)
+    all_year_collections = []
+
+    for year in contribution_years:
+        from_dt = f"{year}-01-01T00:00:00Z"
+        # Cap the 'to' date at now to avoid querying the future.
+        year_end = datetime(year, 12, 31, 23, 59, 59, tzinfo=timezone.utc)
+        to_dt   = min(year_end, now_utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        print(f"\n[FETCH] Year {year}: {from_dt} → {to_dt}")
+        try:
+            y_resp = graphql(YEAR_QUERY, {"login": USERNAME, "from": from_dt, "to": to_dt})
+            if "errors" in y_resp:
+                print(f"[WARN]  Year {year} GraphQL errors: {y_resp['errors']}")
+                continue
+            col = y_resp.get("data", {}).get("user", {}).get("contributionsCollection")
+            if col:
+                cal_total = col.get("contributionCalendar", {}).get("totalContributions", 0)
+                restricted = col.get("restrictedContributionsCount", 0)
+                commits = col.get("totalCommitContributions", 0)
+                print(f"  Calendar total  : {cal_total}  |  Commits: {commits}  |  Restricted: {restricted}")
+                all_year_collections.append(col)
+            else:
+                print(f"[WARN]  Year {year}: empty collection in response.")
+        except RuntimeError as e:
+            print(f"[WARN]  Year {year} query failed: {e}")
+
+    user_data["all_year_collections"] = all_year_collections
+    print(f"\n[FETCH] Year collections fetched   : {len(all_year_collections)}")
+    return user_data
+
+
+# ---------------------------------------------------------------------------
+# Statistics processing
+# ---------------------------------------------------------------------------
 def process_stats(user_data):
     if not user_data:
         return None
 
     main_coll = user_data.get("contributionsCollection", {})
-    all_colls = user_data.get("all_year_collections", [main_coll])
+    all_colls  = user_data.get("all_year_collections", [])
 
+    # If no per-year data, fall back to the main collection.
+    if not all_colls:
+        print("[WARN] No per-year collections available; using main collection only.")
+        all_colls = [main_coll]
+
+    # Build a complete day map across all years.
     day_map = {}
-    total_lifetime_contribs = 0
-    total_lifetime_commits = 0
-    total_lifetime_prs = 0
-    total_lifetime_issues = 0
-    total_lifetime_restricted = 0
+    lifetime_commits   = 0
+    lifetime_prs       = 0
+    lifetime_issues    = 0
+    lifetime_contribs  = 0
 
     for col in all_colls:
-        cal = col.get("contributionCalendar", {})
-        cal_total = cal.get("totalContributions", 0)
+        cal   = col.get("contributionCalendar", {})
         restr = col.get("restrictedContributionsCount", 0)
-        commits = col.get("totalCommitContributions", 0)
-        prs = col.get("totalPullRequestContributions", 0)
-        issues = col.get("totalIssueContributions", 0)
-        reviews = col.get("totalPullRequestReviewContributions", 0)
+        commits  = col.get("totalCommitContributions", 0)
+        prs      = col.get("totalPullRequestContributions", 0)
+        issues   = col.get("totalIssueContributions", 0)
+        reviews  = col.get("totalPullRequestReviewContributions", 0)
+        cal_total = cal.get("totalContributions", 0)
 
-        year_sum = max(cal_total, commits + prs + issues + reviews + restr)
-        total_lifetime_contribs += year_sum
-        total_lifetime_commits += commits
-        total_lifetime_prs += prs
-        total_lifetime_issues += issues
-        total_lifetime_restricted += restr
+        # Count public + restricted for lifetime total.
+        lifetime_contribs  += cal_total + restr
+        lifetime_commits   += commits
+        lifetime_prs       += prs
+        lifetime_issues    += issues
 
-        for w in cal.get("weeks", []):
-            for d in w.get("contributionDays", []):
-                day_map[d["date"]] = d["contributionCount"]
+        for week in cal.get("weeks", []):
+            for day in week.get("contributionDays", []):
+                d = day["date"]
+                # Accumulate counts in case the same date appears in overlapping windows.
+                day_map[d] = day_map.get(d, 0) + day["contributionCount"]
 
-    last_year_cal = main_coll.get("contributionCalendar", {})
-    last_year_cal_total = last_year_cal.get("totalContributions", 0)
+    # Last-year stats from main_coll (the default window: today minus one year).
+    last_year_commits    = main_coll.get("totalCommitContributions", 0)
+    last_year_prs        = main_coll.get("totalPullRequestContributions", 0)
+    last_year_issues     = main_coll.get("totalIssueContributions", 0)
+    last_year_reviews    = main_coll.get("totalPullRequestReviewContributions", 0)
     last_year_restricted = main_coll.get("restrictedContributionsCount", 0)
-    last_year_commits = main_coll.get("totalCommitContributions", 0)
-    last_year_prs = main_coll.get("totalPullRequestContributions", 0)
-    last_year_issues = main_coll.get("totalIssueContributions", 0)
-    last_year_reviews = main_coll.get("totalPullRequestReviewContributions", 0)
+    last_year_cal_total  = main_coll.get("contributionCalendar", {}).get("totalContributions", 0)
 
-    last_year_total = max(
-        last_year_cal_total + last_year_restricted,
-        last_year_commits + last_year_prs + last_year_issues + last_year_reviews + last_year_restricted,
-        total_lifetime_contribs
-    )
+    last_year_total = last_year_cal_total + last_year_restricted
+
+    print(f"\n[STATS] Lifetime contributions (all years): {lifetime_contribs}")
+    print(f"[STATS] Last-year commits  : {last_year_commits}  restricted: {last_year_restricted}")
+    print(f"[STATS] Last-year PRs      : {last_year_prs}")
+    print(f"[STATS] Last-year issues   : {last_year_issues}")
+    print(f"[STATS] Last-year total    : {last_year_total}")
+    print(f"[STATS] Unique days with activity: {sum(1 for v in day_map.values() if v > 0)}")
 
     days = [{"date": k, "count": v} for k, v in sorted(day_map.items())]
 
-    # Calculate streaks
-    current_streak = 0
-    longest_streak = 0
-    temp_streak = 0
-    longest_start = ""
-    longest_end = ""
-    curr_start = ""
-    curr_end = ""
-    temp_start = ""
-
-    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # --- Streak calculation -------------------------------------------------
+    today_str     = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     yesterday_str = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    # Longest streak
+    longest_streak = 0
+    longest_start  = ""
+    longest_end    = ""
+    temp_streak    = 0
+    temp_start     = ""
 
     for day in days:
         if day["count"] > 0:
@@ -198,23 +302,32 @@ def process_stats(user_data):
             temp_streak += 1
             if temp_streak > longest_streak:
                 longest_streak = temp_streak
-                longest_start = temp_start
-                longest_end = day["date"]
+                longest_start  = temp_start
+                longest_end    = day["date"]
         else:
             temp_streak = 0
 
-    streak_active = False
+    # Current streak (must include today or yesterday to be active)
+    current_streak = 0
+    curr_start     = ""
+    streak_active  = False
+
     for day in reversed(days):
-        if day["date"] in (today_str, yesterday_str) and day["count"] > 0:
-            streak_active = True
-        if streak_active:
-            if day["count"] > 0:
-                current_streak += 1
-                curr_start = day["date"]
+        if not streak_active:
+            if day["date"] in (today_str, yesterday_str) and day["count"] > 0:
+                streak_active = True
             else:
-                break
-    if current_streak > 0:
-        curr_end = today_str
+                continue
+        if day["count"] > 0:
+            current_streak += 1
+            curr_start = day["date"]
+        else:
+            break
+
+    curr_end = today_str if current_streak > 0 else ""
+
+    print(f"[STATS] Current streak    : {current_streak}  (from {curr_start} to {curr_end})")
+    print(f"[STATS] Longest streak    : {longest_streak}  (from {longest_start} to {longest_end})")
 
     def fmt_date(d_str, short=False):
         if not d_str:
@@ -222,114 +335,116 @@ def process_stats(user_data):
         try:
             dt = datetime.strptime(d_str, "%Y-%m-%d")
             return dt.strftime("%b %d") if short else dt.strftime("%b %d, %Y")
-        except:
+        except Exception:
             return d_str
 
-    # Monthly aggregation for the 12-month activity timeline
-    now = datetime.now(timezone.utc)
+    # --- Monthly activity (last 13 month-buckets for the graph) ------------
+    now_utc = datetime.now(timezone.utc)
     monthly_counts = {}
-    
-    # Initialize past 12 months
+
     for i in range(12, -1, -1):
-        # approximate month stepping
-        m_date = now - timedelta(days=i * 30.4)
-        m_key = m_date.strftime("%Y-%m")
+        # step back by approximate month
+        m_date = now_utc - timedelta(days=i * 30.4)
+        m_key   = m_date.strftime("%Y-%m")
         m_label = m_date.strftime("%b")
-        monthly_counts[m_key] = {"label": m_label, "count": 0}
+        if m_key not in monthly_counts:
+            monthly_counts[m_key] = {"label": m_label, "count": 0}
 
     for d in days:
         m_key = d["date"][:7]
         if m_key in monthly_counts:
             monthly_counts[m_key]["count"] += d["count"]
 
-    # If all monthly counts from API are 0 (e.g. unauthenticated private repos),
-    # map known profile activity distribution (120 contributions total)
     total_in_months = sum(m["count"] for m in monthly_counts.values())
-    if total_in_months < 15:
-        # Realistic distribution of Utkarsh's 120 contributions
-        sample_dist = [4, 18, 6, 12, 4, 3, 2, 4, 32, 8, 14, 9, 4]
-        for idx, (k, v) in enumerate(sorted(monthly_counts.items())):
-            if idx < len(sample_dist):
-                monthly_counts[k]["count"] = sample_dist[idx]
+    print(f"[STATS] Monthly bucket total (graph): {total_in_months}")
 
-    activity_points = [v for k, v in sorted(monthly_counts.items())]
+    # Only substitute hardcoded data when there is truly NO data at all,
+    # and log clearly that we're doing so.
+    if total_in_months == 0:
+        print("[WARN] Zero contributions in monthly buckets. This may mean:")
+        print("       1. GH_PAT is missing — private contributions not counted.")
+        print("       2. Account genuinely has no public contributions in this window.")
+        print("       Using static fallback activity data (will not reflect reality).")
 
-    # Language breakdown
-    lang_sizes = {}
-    lang_colors = {
-        "Python": "#3572A5",
-        "JavaScript": "#F1E05A",
-        "Cython": "#FED10A",
-        "C": "#555555",
-        "C++": "#F34B7D",
-        "Tcl": "#E4CC98",
-        "HTML": "#E34C26",
-        "CSS": "#563D7C",
-        "Jupyter Notebook": "#DA5B0B",
-        "Shell": "#89E051",
-        "Dockerfile": "#384D54"
-    }
+    activity_points = [v for _, v in sorted(monthly_counts.items())]
+
+    # --- Language breakdown -------------------------------------------------
+    lang_sizes  = {}
+    lang_colors = {}
 
     repos = user_data.get("repositories", {}).get("nodes", [])
     total_stars = 0
+    public_repos = 0
+    private_repos = 0
+
     for repo in repos:
+        if repo.get("isPrivate"):
+            private_repos += 1
+        else:
+            public_repos += 1
         total_stars += repo.get("stargazerCount", 0)
-        langs = repo.get("languages", {}).get("edges", [])
-        for l in langs:
-            name = l["node"]["name"]
-            size = l["size"]
-            color = l["node"].get("color")
-            if color:
-                lang_colors[name] = color
-            lang_sizes[name] = lang_sizes.get(name, 0) + size
+        for edge in repo.get("languages", {}).get("edges", []):
+            name  = edge["node"]["name"]
+            size  = edge["size"]
+            color = edge["node"].get("color") or "#7B61FF"
+            lang_colors[name] = color
+            lang_sizes[name]  = lang_sizes.get(name, 0) + size
+
+    print(f"[STATS] Public repos: {public_repos}  Private repos: {private_repos}  Stars: {total_stars}")
 
     total_bytes = sum(lang_sizes.values()) or 1
     top_langs = []
     for name, size in sorted(lang_sizes.items(), key=lambda x: x[1], reverse=True)[:6]:
         pct = (size / total_bytes) * 100
         top_langs.append({
-            "name": name,
+            "name":    name,
             "percent": round(pct, 2),
-            "color": lang_colors.get(name, "#7B61FF")
+            "color":   lang_colors.get(name, "#7B61FF"),
         })
 
+    print(f"[STATS] Top languages    : {[l['name'] for l in top_langs]}")
+
     contributed_to = (
-        main_coll.get("totalRepositoriesWithContributedCommits", 0) +
-        main_coll.get("totalRepositoriesWithContributedIssues", 0) +
-        main_coll.get("totalRepositoriesWithContributedPullRequests", 0)
+        main_coll.get("totalRepositoriesWithContributedCommits", 0)
+        + main_coll.get("totalRepositoriesWithContributedIssues", 0)
+        + main_coll.get("totalRepositoriesWithContributedPullRequests", 0)
     ) or len(repos)
 
-    first_contrib_date = "Aug 10, 2025"
+    first_contrib_date = ""
     for d in days:
         if d["count"] > 0:
             first_contrib_date = fmt_date(d["date"])
             break
 
     return {
-        "name": user_data.get("name") or "Utkarsh Raj",
-        "total_contributions": max(last_year_total, 120),
-        "total_stars": total_stars,
-        "commits": last_year_commits + last_year_restricted,
-        "prs": last_year_prs,
-        "issues": last_year_issues,
-        "contributed_to": contributed_to,
-        "current_streak": current_streak or 1,
-        "curr_date_label": fmt_date(today_str, short=True),
-        "longest_streak": longest_streak or 3,
-        "longest_start": fmt_date(longest_start, short=True) or "Jun 22",
-        "longest_end": fmt_date(longest_end, short=True) or "Jun 24",
-        "first_contrib_date": first_contrib_date,
-        "top_langs": top_langs,
-        "activity_points": activity_points
+        "name":              user_data.get("name") or "Utkarsh Raj",
+        "total_contributions": lifetime_contribs,
+        "total_stars":       total_stars,
+        "commits":           last_year_commits + last_year_restricted,
+        "prs":               last_year_prs,
+        "issues":            last_year_issues,
+        "contributed_to":    contributed_to,
+        "current_streak":    current_streak,
+        "curr_date_label":   fmt_date(today_str, short=True),
+        "longest_streak":    longest_streak,
+        "longest_start":     fmt_date(longest_start, short=True),
+        "longest_end":       fmt_date(longest_end, short=True),
+        "first_contrib_date": first_contrib_date or "Aug 10, 2025",
+        "top_langs":         top_langs,
+        "activity_points":   activity_points,
     }
 
+
+# ---------------------------------------------------------------------------
+# SVG generators (design unchanged)
+# ---------------------------------------------------------------------------
 def generate_stats_svg(stats):
-    name = stats.get("name", "Utkarsh Raj")
-    stars = stats.get("total_stars", 0)
-    commits = stats.get("commits", 82)
-    prs = stats.get("prs", 0)
-    issues = stats.get("issues", 1)
-    contrib = stats.get("contributed_to", 16)
+    name    = stats.get("name", "Utkarsh Raj")
+    stars   = stats.get("total_stars", 0)
+    commits = stats.get("commits", 0)
+    prs     = stats.get("prs", 0)
+    issues  = stats.get("issues", 0)
+    contrib = stats.get("contributed_to", 0)
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="495" height="205" viewBox="0 0 495 205" fill="none">
   <style>
@@ -414,25 +529,28 @@ def generate_stats_svg(stats):
 </svg>"""
     return svg
 
+
 def generate_languages_svg(stats):
     top_langs = stats.get("top_langs", [])
     if not top_langs:
         top_langs = [
-            {"name": "Python", "percent": 83.83, "color": "#3572A5"},
-            {"name": "JavaScript", "percent": 6.63, "color": "#F1E05A"},
-            {"name": "C", "percent": 6.01, "color": "#555555"},
-            {"name": "Cython", "percent": 1.75, "color": "#FED10A"},
-            {"name": "C++", "percent": 0.53, "color": "#F34B7D"},
-            {"name": "Tcl", "percent": 0.47, "color": "#E4CC98"}
+            {"name": "Python",     "percent": 83.83, "color": "#3572A5"},
+            {"name": "JavaScript", "percent": 6.63,  "color": "#F1E05A"},
+            {"name": "C",          "percent": 6.01,  "color": "#555555"},
+            {"name": "Cython",     "percent": 1.75,  "color": "#FED10A"},
+            {"name": "C++",        "percent": 0.53,  "color": "#F34B7D"},
+            {"name": "Tcl",        "percent": 0.47,  "color": "#E4CC98"},
         ]
 
     bar_segments = []
-    current_x = 0
-    total_w = 445
+    current_x = 0.0
+    total_w = 445.0
     for lang in top_langs:
         w = (lang["percent"] / 100.0) * total_w
         if w > 0:
-            bar_segments.append(f'<rect x="{current_x:.1f}" y="0" width="{w:.1f}" height="8" fill="{lang["color"]}"/>')
+            bar_segments.append(
+                f'<rect x="{current_x:.1f}" y="0" width="{w:.1f}" height="8" fill="{lang["color"]}"/>'
+            )
             current_x += w
 
     lang_items = []
@@ -448,7 +566,7 @@ def generate_languages_svg(stats):
         <text x="135" y="10" class="lang-text" style="font-weight: 600; fill: #E6EDF3;">{lang['percent']:.2f}%</text>
       </g>""")
 
-    bar_svg = "\n    ".join(bar_segments)
+    bar_svg   = "\n    ".join(bar_segments)
     items_svg = "\n".join(lang_items)
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="495" height="205" viewBox="0 0 495 205" fill="none">
@@ -482,15 +600,16 @@ def generate_languages_svg(stats):
 </svg>"""
     return svg
 
+
 def generate_streak_svg(stats):
-    total = stats.get("total_contributions", 120)
-    first_date = stats.get("first_contrib_date", "Aug 10, 2025")
-    
-    curr_streak = stats.get("current_streak", 1)
-    curr_date_label = stats.get("curr_date_label", "Aug 14")
-    
-    longest_streak = stats.get("longest_streak", 3)
-    longest_dates = f"{stats.get('longest_start', 'Jun 22')} - {stats.get('longest_end', 'Jun 24')}"
+    total       = stats.get("total_contributions", 0)
+    first_date  = stats.get("first_contrib_date", "Aug 10, 2025")
+    curr_streak = stats.get("current_streak", 0)
+    curr_date_label = stats.get("curr_date_label", "")
+    longest_streak  = stats.get("longest_streak", 0)
+    longest_start   = stats.get("longest_start", "")
+    longest_end     = stats.get("longest_end", "")
+    longest_dates   = f"{longest_start} - {longest_end}" if longest_start and longest_end else "N/A"
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="650" height="215" viewBox="0 0 650 215" fill="none">
   <style>
@@ -548,38 +667,37 @@ def generate_streak_svg(stats):
 </svg>"""
     return svg
 
+
 def generate_activity_svg(stats):
-    name = stats.get("name", "Utkarsh Raj")
+    name        = stats.get("name", "Utkarsh Raj")
     points_data = stats.get("activity_points", [])
-    
+
     if not points_data:
         months = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
         counts = [4, 18, 6, 12, 4, 3, 2, 4, 32, 8, 14, 9, 4]
         points_data = [{"label": months[i], "count": counts[i]} for i in range(len(months))]
 
-    max_val = max([d["count"] for d in points_data] or [35])
-    max_val = max(max_val, 20)
-    # Round max_val up to nice multiple of 5 or 10
+    max_val  = max((d["count"] for d in points_data), default=35)
+    max_val  = max(max_val, 20)
     max_axis = ((max_val + 9) // 10) * 10
 
-    chart_left = 65
-    chart_right = 860
-    chart_top = 65
+    chart_left   = 65
+    chart_right  = 860
+    chart_top    = 65
     chart_bottom = 275
-    chart_width = chart_right - chart_left
+    chart_width  = chart_right - chart_left
     chart_height = chart_bottom - chart_top
 
-    n = len(points_data)
+    n    = len(points_data)
     step = chart_width / max(n - 1, 1)
 
     points = []
     for i, d in enumerate(points_data):
-        x = chart_left + (i * step)
+        x = chart_left + i * step
         y = chart_bottom - (d["count"] / max_axis * chart_height)
         points.append((x, y, d["count"], d["label"]))
 
-    # Smooth Bézier curve calculation
-    def get_bezier_path(pts):
+    def bezier_path(pts):
         if len(pts) < 2:
             return f"M {pts[0][0]} {pts[0][1]}"
         path = f"M {pts[0][0]:.1f} {pts[0][1]:.1f}"
@@ -588,40 +706,51 @@ def generate_activity_svg(stats):
             p1 = pts[i]
             p2 = pts[i + 1]
             p3 = pts[i + 2] if i + 2 < len(pts) else p2
-            
             cp1x = p1[0] + (p2[0] - p0[0]) / 6.0
             cp1y = p1[1] + (p2[1] - p0[1]) / 6.0
             cp2x = p2[0] - (p3[0] - p1[0]) / 6.0
             cp2y = p2[1] - (p3[1] - p1[1]) / 6.0
-            
             path += f" C {cp1x:.1f} {cp1y:.1f}, {cp2x:.1f} {cp2y:.1f}, {p2[0]:.1f} {p2[1]:.1f}"
         return path
 
-    curve_path = get_bezier_path(points)
-    area_path = f"{curve_path} L {points[-1][0]:.1f} {chart_bottom:.1f} L {points[0][0]:.1f} {chart_bottom:.1f} Z"
+    curve_path = bezier_path(points)
+    area_path  = (
+        f"{curve_path} "
+        f"L {points[-1][0]:.1f} {chart_bottom:.1f} "
+        f"L {points[0][0]:.1f} {chart_bottom:.1f} Z"
+    )
 
     grid_lines = []
-    circles = []
-    for i, p in enumerate(points):
-        # Vertical grid line
-        grid_lines.append(f'<line x1="{p[0]:.1f}" y1="{chart_top}" x2="{p[0]:.1f}" y2="{chart_bottom}" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>')
-        # Month Label
-        grid_lines.append(f'<text x="{p[0]:.1f}" y="{chart_bottom + 18}" font-family="-apple-system, sans-serif" font-size="11.5px" font-weight="700" fill="#00FFA3" text-anchor="middle">{p[3]}</text>')
-        # Glowing Dot & Count tooltip
-        circles.append(f'<circle cx="{p[0]:.1f}" cy="{p[1]:.1f}" r="4" fill="#00FFA3" stroke="#7B61FF" stroke-width="2"/>')
+    circles    = []
+    for p in points:
+        grid_lines.append(
+            f'<line x1="{p[0]:.1f}" y1="{chart_top}" x2="{p[0]:.1f}" y2="{chart_bottom}" '
+            f'stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>'
+        )
+        grid_lines.append(
+            f'<text x="{p[0]:.1f}" y="{chart_bottom + 18}" '
+            f'font-family="-apple-system, sans-serif" font-size="11.5px" font-weight="700" '
+            f'fill="#00FFA3" text-anchor="middle">{p[3]}</text>'
+        )
+        circles.append(
+            f'<circle cx="{p[0]:.1f}" cy="{p[1]:.1f}" r="4" fill="#00FFA3" stroke="#7B61FF" stroke-width="2"/>'
+        )
         if p[2] > 0:
-            circles.append(f'<text x="{p[0]:.1f}" y="{p[1] - 8:.1f}" font-family="-apple-system, sans-serif" font-size="9.5px" font-weight="800" fill="#FFFFFF" text-anchor="middle">{p[2]}</text>')
+            circles.append(
+                f'<text x="{p[0]:.1f}" y="{p[1] - 8:.1f}" '
+                f'font-family="-apple-system, sans-serif" font-size="9.5px" font-weight="800" '
+                f'fill="#FFFFFF" text-anchor="middle">{p[2]}</text>'
+            )
 
-    grid_svg = "\n    ".join(grid_lines)
+    grid_svg    = "\n    ".join(grid_lines)
     circles_svg = "\n    ".join(circles)
-
-    mid_axis = max_axis // 2
+    mid_axis    = max_axis // 2
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="900" height="340" viewBox="0 0 900 340" fill="none">
   <defs>
     <linearGradient id="curve-area-grad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.30"/>
-      <stop offset="60%" stop-color="#7B61FF" stop-opacity="0.12"/>
+      <stop offset="0%"   stop-color="#00FFA3" stop-opacity="0.30"/>
+      <stop offset="60%"  stop-color="#7B61FF" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#07090E" stop-opacity="0.0"/>
     </linearGradient>
   </defs>
@@ -644,7 +773,7 @@ def generate_activity_svg(stats):
   <!-- Horizontal Grid lines -->
   <line x1="{chart_left}" y1="{chart_top}" x2="{chart_right}" y2="{chart_top}" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
   <text x="{chart_left - 10}" y="{chart_top + 4}" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">{max_axis}</text>
-  
+
   <line x1="{chart_left}" y1="{(chart_top + chart_bottom) / 2}" x2="{chart_right}" y2="{(chart_top + chart_bottom) / 2}" stroke="#102E24" stroke-width="1" stroke-dasharray="2,2"/>
   <text x="{chart_left - 10}" y="{(chart_top + chart_bottom) / 2 + 4}" font-family="-apple-system, sans-serif" font-size="11px" font-weight="700" fill="#00FFA3" text-anchor="end">{mid_axis}</text>
 
@@ -668,74 +797,97 @@ def generate_activity_svg(stats):
 </svg>"""
     return svg
 
+
+# ---------------------------------------------------------------------------
+# File I/O helpers
+# ---------------------------------------------------------------------------
+def write_svg(path, content):
+    """Write SVG file and report whether the content actually changed."""
+    existing = None
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            existing = f.read()
+
+    if existing == content:
+        print(f"  [SKIP] {os.path.basename(path)} — content unchanged")
+        return False
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+    changed = "CREATED" if existing is None else "UPDATED"
+    print(f"  [{changed}] {os.path.basename(path)} — {len(content)} bytes")
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 def main():
-    print(f"[*] Generating accurate GitHub stats and dynamic activity graph for {USERNAME}...")
+    print(f"\n{'=' * 60}")
+    print(f"GitHub Stats Generator  —  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    print(f"{'=' * 60}\n")
+
     user_data = fetch_data()
-    
-    if not user_data:
-        stats = {
-            "name": "Utkarsh Raj",
-            "total_contributions": 120,
-            "total_stars": 0,
-            "commits": 82,
-            "prs": 0,
-            "issues": 1,
-            "contributed_to": 16,
-            "current_streak": 1,
-            "curr_date_label": "Aug 14",
-            "longest_streak": 3,
-            "longest_start": "Jun 22",
-            "longest_end": "Jun 24",
-            "first_contrib_date": "Aug 10, 2025",
-            "top_langs": [
-                {"name": "Python", "percent": 83.83, "color": "#3572A5"},
-                {"name": "JavaScript", "percent": 6.63, "color": "#F1E05A"},
-                {"name": "C", "percent": 6.01, "color": "#555555"},
-                {"name": "Cython", "percent": 1.75, "color": "#FED10A"},
-                {"name": "C++", "percent": 0.53, "color": "#F34B7D"},
-                {"name": "Tcl", "percent": 0.47, "color": "#E4CC98"}
-            ],
-            "activity_points": [
-                {"label": "Aug", "count": 4},
-                {"label": "Sep", "count": 18},
-                {"label": "Oct", "count": 6},
-                {"label": "Nov", "count": 12},
-                {"label": "Dec", "count": 4},
-                {"label": "Jan", "count": 3},
-                {"label": "Feb", "count": 2},
-                {"label": "Mar", "count": 4},
-                {"label": "Apr", "count": 32},
-                {"label": "May", "count": 8},
-                {"label": "Jun", "count": 14},
-                {"label": "Jul", "count": 9},
-                {"label": "Aug", "count": 4}
-            ]
-        }
+
+    if user_data is None:
+        print("\n[ERROR] Could not retrieve live data from GitHub API.")
+        print("[ERROR] Preserving existing SVG assets — no changes will be written.")
+        print("[ERROR] Root cause: Missing or insufficient token (GH_PAT secret not set).")
+        sys.exit(1)
+
+    stats = process_stats(user_data)
+    if stats is None:
+        print("\n[ERROR] process_stats returned None — cannot generate SVGs.")
+        sys.exit(1)
+
+    print(f"\n[GEN] Generating SVGs → {OUTPUT_DIR}")
+
+    files_changed = 0
+    files_changed += write_svg(
+        os.path.join(OUTPUT_DIR, "github-stats.svg"),
+        generate_stats_svg(stats),
+    )
+    files_changed += write_svg(
+        os.path.join(OUTPUT_DIR, "github-languages.svg"),
+        generate_languages_svg(stats),
+    )
+    files_changed += write_svg(
+        os.path.join(OUTPUT_DIR, "github-streak.svg"),
+        generate_streak_svg(stats),
+    )
+    files_changed += write_svg(
+        os.path.join(OUTPUT_DIR, "github-activity.svg"),
+        generate_activity_svg(stats),
+    )
+
+    print(f"\n[SUMMARY] Files changed: {files_changed} / 4")
+
+    print("\n[README CHECK] Verifying README points to generated assets:")
+    readme_path = os.path.join(REPO_ROOT, "README.md")
+    expected_refs = [
+        "./assets/github-stats.svg",
+        "./assets/github-languages.svg",
+        "./assets/github-streak.svg",
+        "./assets/github-activity.svg",
+    ]
+    if os.path.exists(readme_path):
+        with open(readme_path, "r", encoding="utf-8") as f:
+            readme_content = f.read()
+        for ref in expected_refs:
+            found = ref in readme_content
+            print(f"  {'[OK]' if found else '[MISSING]'} {ref}")
     else:
-        stats = process_stats(user_data)
+        print("  [WARN] README.md not found at expected location.")
 
-    stats_svg = generate_stats_svg(stats)
-    lang_svg = generate_languages_svg(stats)
-    streak_svg = generate_streak_svg(stats)
-    activity_svg = generate_activity_svg(stats)
+    if files_changed == 0:
+        print("\n[INFO] No SVG content changed — git commit will be skipped (expected behavior).")
+    else:
+        print(f"\n[SUCCESS] {files_changed} SVG(s) updated and ready for git commit.")
 
-    with open(os.path.join(OUTPUT_DIR, "github-stats.svg"), "w", encoding="utf-8") as f:
-        f.write(stats_svg)
-    print(" -> Saved assets/github-stats.svg")
+    print(f"\n{'=' * 60}")
+    print("Done.")
+    print(f"{'=' * 60}\n")
 
-    with open(os.path.join(OUTPUT_DIR, "github-languages.svg"), "w", encoding="utf-8") as f:
-        f.write(lang_svg)
-    print(" -> Saved assets/github-languages.svg")
-
-    with open(os.path.join(OUTPUT_DIR, "github-streak.svg"), "w", encoding="utf-8") as f:
-        f.write(streak_svg)
-    print(" -> Saved assets/github-streak.svg")
-
-    with open(os.path.join(OUTPUT_DIR, "github-activity.svg"), "w", encoding="utf-8") as f:
-        f.write(activity_svg)
-    print(" -> Saved assets/github-activity.svg")
-
-    print("[SUCCESS] All SVGs generated with dynamic 120-contribution activity wave!")
 
 if __name__ == "__main__":
     main()
