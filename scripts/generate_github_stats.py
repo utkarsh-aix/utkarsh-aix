@@ -143,11 +143,11 @@ def fetch_data():
     # --- Diagnostic header --------------------------------------------------
     print("=" * 60)
     print(f"[DIAG] Username          : {USERNAME}")
-    print(f"[DIAG] Token present     : {'YES' if TOKEN else 'NO — cannot query API'}")
+    print(f"[DIAG] Token present     : {'YES' if TOKEN else 'NO -- cannot query API'}")
     if USING_ACTIONS_DEFAULT_TOKEN:
         print("[DIAG] Token type        : GITHUB_TOKEN (actions default)")
         print("[DIAG] WARNING           : Private contributions will NOT be counted.")
-        print("[DIAG] FIX               : Add a GH_PAT secret with scopes read:user, repo.")
+        print("[DIAG] NOTE              : Add a GH_PAT secret (scopes: read:user, repo) for private data.")
     elif TOKEN:
         print("[DIAG] Token type        : Custom PAT / GH_PAT")
     print(f"[DIAG] Output directory  : {OUTPUT_DIR}")
@@ -156,7 +156,7 @@ def fetch_data():
 
     if not TOKEN:
         print("[ERROR] No token available. Cannot fetch live data.")
-        print("[ERROR] Set the GH_PAT secret in repository Settings → Secrets → Actions.")
+        print("[ERROR] Set the GH_PAT secret in repository Settings -> Secrets -> Actions.")
         return None
 
     # --- Main user query ----------------------------------------------------
@@ -199,7 +199,7 @@ def fetch_data():
         year_end = datetime(year, 12, 31, 23, 59, 59, tzinfo=timezone.utc)
         to_dt   = min(year_end, now_utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        print(f"\n[FETCH] Year {year}: {from_dt} → {to_dt}")
+        print(f"\n[FETCH] Year {year}: {from_dt} -> {to_dt}")
         try:
             y_resp = graphql(YEAR_QUERY, {"login": USERNAME, "from": from_dt, "to": to_dt})
             if "errors" in y_resp:
@@ -358,13 +358,13 @@ def process_stats(user_data):
     total_in_months = sum(m["count"] for m in monthly_counts.values())
     print(f"[STATS] Monthly bucket total (graph): {total_in_months}")
 
-    # Only substitute hardcoded data when there is truly NO data at all,
-    # and log clearly that we're doing so.
+    # Do NOT substitute fake data. When total is zero the graph will show
+    # real zeros with correct current-date month labels.
     if total_in_months == 0:
-        print("[WARN] Zero contributions in monthly buckets. This may mean:")
-        print("       1. GH_PAT is missing — private contributions not counted.")
-        print("       2. Account genuinely has no public contributions in this window.")
-        print("       Using static fallback activity data (will not reflect reality).")
+        print("[WARN] Zero contributions in monthly buckets.")
+        print("       GITHUB_TOKEN sees only public contributions. If your work is")
+        print("       in private repos, add a GH_PAT secret (scopes: read:user, repo).")
+        print("       Graph will render real zero values with correct month labels.")
 
     activity_points = [v for _, v in sorted(monthly_counts.items())]
 
@@ -831,16 +831,16 @@ def main():
 
     if user_data is None:
         print("\n[ERROR] Could not retrieve live data from GitHub API.")
-        print("[ERROR] Preserving existing SVG assets — no changes will be written.")
-        print("[ERROR] Root cause: Missing or insufficient token (GH_PAT secret not set).")
+        print("[ERROR] Preserving existing SVG assets -- no changes will be written.")
+        print("[ERROR] Check: token is present and valid, username is correct, API rate limit not exceeded.")
         sys.exit(1)
 
     stats = process_stats(user_data)
     if stats is None:
-        print("\n[ERROR] process_stats returned None — cannot generate SVGs.")
+        print("\n[ERROR] process_stats returned None -- cannot generate SVGs.")
         sys.exit(1)
 
-    print(f"\n[GEN] Generating SVGs → {OUTPUT_DIR}")
+    print(f"\n[GEN] Generating SVGs -> {OUTPUT_DIR}")
 
     files_changed = 0
     files_changed += write_svg(
@@ -884,9 +884,9 @@ def main():
     else:
         print(f"\n[SUCCESS] {files_changed} SVG(s) updated and ready for git commit.")
 
-    print(f"\n{'=' * 60}")
+    print("\n" + "=" * 60)
     print("Done.")
-    print(f"{'=' * 60}\n")
+    print("=" * 60 + "\n")
 
 
 if __name__ == "__main__":

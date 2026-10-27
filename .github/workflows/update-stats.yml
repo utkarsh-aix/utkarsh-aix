@@ -6,8 +6,7 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
-# Prevent the workflow from recursively triggering itself via the push.
-# The commit message uses [skip ci], but this is a belt-and-suspenders guard.
+# Prevent recursive triggers from the auto-commit push.
 concurrency:
   group: stats-update
   cancel-in-progress: false
@@ -20,12 +19,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # -----------------------------------------------------------------------
+      # Checkout with the default GITHUB_TOKEN.
+      # If GH_PAT is set it will be used by the script for richer data,
+      # but checkout itself always uses the built-in token for reliability.
+      # -----------------------------------------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # Use the PAT for checkout so the subsequent push is authenticated.
-          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,7 +35,7 @@ jobs:
           python-version: '3.11'
 
       # -----------------------------------------------------------------------
-      # Diagnostic: report environment before running the script
+      # Pre-flight: report environment so failures are immediately visible
       # -----------------------------------------------------------------------
       - name: Pre-flight Diagnostics
         run: |
@@ -43,45 +45,53 @@ jobs:
           echo "Python version : $(python --version)"
           echo "Repository     : $GITHUB_REPOSITORY"
           echo "Branch         : $GITHUB_REF_NAME"
-          echo "GH_PAT present : ${{ secrets.GH_PAT != '' && 'YES' || 'NO — private contributions will be missing' }}"
+          if [ -n "$GH_PAT_SET" ]; then
+            echo "GH_PAT present : YES (private contributions will be counted)"
+          else
+            echo "GH_PAT present : NO (only public contributions visible)"
+            echo "               Add GH_PAT secret (scopes: read:user, repo) for full data."
+          fi
           echo "===================================================="
           echo ""
           echo "[README REFS CHECK]"
           grep -o 'src="[^"]*assets[^"]*"' README.md || echo "(no asset srcs found)"
+        env:
+          GH_PAT_SET: ${{ secrets.GH_PAT }}
 
       # -----------------------------------------------------------------------
-      # Generate the SVGs — exits non-zero if the API call fails completely
+      # Generate the SVGs.
+      # GH_PAT is passed separately so the script can distinguish it from
+      # the built-in GITHUB_TOKEN and log accordingly.
+      # If GH_PAT is not set, the script falls through to GITHUB_TOKEN,
+      # which works for public data.
       # -----------------------------------------------------------------------
       - name: Generate GitHub Stats SVGs
         env:
           GITHUB_USERNAME: 'utkarsh-aix'
-          # GH_PAT is a Personal Access Token with scopes: read:user, repo
-          # Without it only public contributions appear.
           GH_PAT: ${{ secrets.GH_PAT }}
-          # GITHUB_TOKEN is always available but cannot see private contributions.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/generate_github_stats.py
-        # Do NOT continue silently if the script fails.
-        # The script itself calls sys.exit(1) on critical errors.
 
       # -----------------------------------------------------------------------
-      # Verify the outputs exist before trying to commit
+      # Verify outputs exist before committing
       # -----------------------------------------------------------------------
       - name: Verify Generated Assets
         run: |
           echo "[ASSET VERIFICATION]"
+          all_ok=true
           for f in assets/github-stats.svg assets/github-languages.svg assets/github-streak.svg assets/github-activity.svg; do
             if [ -f "$f" ]; then
               echo "  [OK]    $f  ($(wc -c < "$f") bytes)"
             else
-              echo "  [ERROR] $f  — FILE MISSING"
-              exit 1
+              echo "  [ERROR] $f -- FILE MISSING"
+              all_ok=false
             fi
           done
+          if [ "$all_ok" = "false" ]; then exit 1; fi
 
       # -----------------------------------------------------------------------
-      # Commit only if content changed; never commit if nothing is new
+      # Commit only when content changed
       # -----------------------------------------------------------------------
       - name: Commit and Push Updated Assets
         run: |
@@ -91,10 +101,10 @@ jobs:
           git add assets/
 
           if git diff --staged --quiet; then
-            echo "[COMMIT] No changes detected in assets/ — skipping commit."
+            echo "[COMMIT] No changes detected in assets/ -- skipping commit."
             echo "         This is expected when data has not changed since the last run."
           else
-            echo "[COMMIT] Changes detected — committing updated assets."
+            echo "[COMMIT] Changes detected -- committing updated assets."
             git diff --staged --stat
             git commit -m "chore(stats): auto-update GitHub stats and contribution graph [skip ci]"
             git push origin HEAD
